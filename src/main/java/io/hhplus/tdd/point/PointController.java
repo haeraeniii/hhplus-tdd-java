@@ -13,7 +13,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/point")
 public class PointController {
-
     private static final Logger log = LoggerFactory.getLogger(PointController.class);
 
     private final UserPointTable userPointTable;

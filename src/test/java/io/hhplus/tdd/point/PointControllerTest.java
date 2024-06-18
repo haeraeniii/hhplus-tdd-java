@@ -63,7 +63,6 @@ class PointControllerTest {
        pointHistoryTable.insert(3, 30000, TransactionType.CHARGE, System.currentTimeMillis());
        pointHistoryTable.insert(3, 3000, TransactionType.USE, System.currentTimeMillis());
        pointHistoryTable.insert(3, 500, TransactionType.USE, System.currentTimeMillis());
-       pointHistoryTable.insert(3, 200, TransactionType.CHARGE, System.currentTimeMillis());
 
        //when
        List<PointHistory> pointHistories = pointHistoryTable.selectAllByUserId(3);
