@@ -64,7 +64,6 @@ public class PointController {
 
         if(userPoint.point() < amount) {
             log.info("현재 잔여 포인트는" + userPoint.point() + "입니다.");
-
             return null;
         } else {
             pointHistoryTable.insert(id, amount, TransactionType.USE, System.currentTimeMillis());

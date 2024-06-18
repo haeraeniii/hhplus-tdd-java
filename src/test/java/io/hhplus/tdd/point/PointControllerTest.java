@@ -29,7 +29,7 @@ class PointControllerTest {
     }
 
     @Test
-    public void useTest() throws Exception {
+    public void useTest() {
         //given
         int amount = 30000;
         UserPoint userPoint = userPointTable.insertOrUpdate(0, 10000);
@@ -46,7 +46,7 @@ class PointControllerTest {
     }
 
     @Test
-    public void pointTest() throws Exception {
+    public void pointTest() {
         //given
         UserPoint userPoint = userPointTable.insertOrUpdate(1, 30000);
 
@@ -58,7 +58,7 @@ class PointControllerTest {
     }
 
    @Test
-   public void historyTest() throws Exception {
+   public void historyTest() {
        //given
        pointHistoryTable.insert(3, 30000, TransactionType.CHARGE, System.currentTimeMillis());
        pointHistoryTable.insert(3, 3000, TransactionType.USE, System.currentTimeMillis());
@@ -69,7 +69,6 @@ class PointControllerTest {
        List<PointHistory> pointHistories = pointHistoryTable.selectAllByUserId(3);
 
        //then
-//       Assertions.assertThat(pointHistories.size()).isEqualTo(4);
-       Assertions.assertThat(pointHistories.get(1).type()).isEqualTo(TransactionType.USE);
+       Assertions.assertThat(pointHistories.size()).isEqualTo(4);
    }
 }
