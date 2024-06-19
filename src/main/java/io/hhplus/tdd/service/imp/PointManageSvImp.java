@@ -1,10 +1,10 @@
 package io.hhplus.tdd.service.imp;
 
-import io.hhplus.tdd.database.PointHistoryTable;
-import io.hhplus.tdd.database.UserPointTable;
 import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.TransactionType;
 import io.hhplus.tdd.point.UserPoint;
+import io.hhplus.tdd.repository.PointHistoryRepository;
+import io.hhplus.tdd.repository.UserPointRepository;
 import io.hhplus.tdd.service.PointManageSv;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
@@ -16,39 +16,44 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PointManageSvImp implements PointManageSv {
 
-    private final UserPointTable userPointTable;
+    private final UserPointRepository userPointRepository;
+    private final PointHistoryRepository pointHistoryRepository;
 
-    private final PointHistoryTable pointHistoryTable;
-
+    // 유저 포인트 조회
     @Override
     public UserPoint getUserPoint(long id) {
-        return userPointTable.selectById(id);
+        return userPointRepository.selectById(id);
     }
 
+    // 유저 포인트 내역 조회
     @Override
     public List<PointHistory> getHistoryList(long id) {
-        return pointHistoryTable.selectAllByUserId(id);
+        return pointHistoryRepository.selectAllByUserId(id);
     }
 
+    // 유저 포인트 충전
     @Override
     @Synchronized
     public UserPoint chargePoint(long id, long amount) {
-        pointHistoryTable.insert(id, amount, TransactionType.CHARGE, System.currentTimeMillis());
+        pointHistoryRepository.insert(id, amount, TransactionType.CHARGE, System.currentTimeMillis());
 
-        return userPointTable.insertOrUpdate(id, amount);
+        return userPointRepository.insertOrUpdate(id, amount);
     }
 
+    // 유저 포인트 사용
     @Override
     @Synchronized
     public UserPoint usePoint(long id, long amount) {
-        UserPoint userPoint = userPointTable.selectById(id);
+        UserPoint userPoint = userPointRepository.selectById(id);
 
+        // 충전 포인트가 사용할 포인트보다 적을 경우
         if(userPoint.point() < amount) {
             return null;
         } else {
-            pointHistoryTable.insert(id, amount, TransactionType.USE, System.currentTimeMillis());
+            //히스토리 내역 추가
+            pointHistoryRepository.insert(id, amount, TransactionType.USE, System.currentTimeMillis());
         }
 
-        return userPointTable.insertOrUpdate(id, userPoint.point() - amount);
+        return userPointRepository.insertOrUpdate(id, userPoint.point() - amount);
     }
 }
